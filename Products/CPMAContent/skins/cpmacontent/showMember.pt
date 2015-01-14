@@ -1,0 +1,200 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master">
+  <body>
+
+    <div metal:fill-slot="main"
+       tal:define="standm modules/Products/PythonScripts/standard;
+                   view context/@@findpod_view;
+                   plone_view context/@@plone;
+                   portal_state context/@@plone_portal_state;">
+      <div metal:define-macro="main" tal:omit-tag="">
+
+<tal:block repeat="member python:view.queryByRec(request.rec)"
+    tal:define="show_extra python:here.getId() == 'memberdirectory'">
+
+  <tal:block condition="not: portal_state/anonymous">
+    <div tal:condition="python: str(member.id) == user.getUserName()" class="comment">
+      <h2>CPMA Member Record</h2>
+      <p><strong>This is your member record.</strong> <a href="editMember" tal:attributes="href string:editMember?rec=${member/rec}">Click here</a> to edit the supplementary member profile information (secondary practice address, hours, specialties, website, etc.).</p>
+      <p></p>
+    </div>
+    <div tal:condition="view/canEditHere" class="comment">
+      <h2>CPMA Member Record</h2>
+      <p><a href="editMember" tal:attributes="href string:editMember?rec=${member/rec}">Click here</a> to edit the supplementary member profile information (secondary practice address, hours, specialties, website, etc.).</p>
+      <p></p>
+    </div>
+  </tal:block>
+
+    <h1><span tal:replace="string: ${member/fname} ${member/lname}" /><span tal:condition="member/designation" tal:replace="string:, ${member/designation}" /></h1>
+    <h3 tal:condition="member/company" tal:content="member/company" />
+
+<style type="text/css">
+table.showmember {
+  margin-top: 1em;
+  width: 100%;
+}
+table.showmember th, table.showmember td {
+  padding: 0.5em;
+}
+table.showmember th {
+  text-align: left;
+  background-color: #ced5df;
+}
+</style>
+
+  <table border="0" cellspacing="0" cellpadding="0" class="showmember">
+    <tr valign="top">
+      <th>Primary Office</th>
+    </tr>
+    <tr valign="top">
+      <td>
+        <tal:test condition="member/address">
+          <div tal:content="structure python: standm.newline_to_br(standm.html_quote(member.address))" />
+          <div>
+            <span tal:replace="member/city" />, CA <span tal:replace="member/zip" />
+          </div>
+          <a href="#" target="_blank"
+           tal:condition="python:1"
+           tal:attributes="href python: here.mapURL(member.address.split('\n')[0], member.city, member.zip)">Draw me a map...</a> <small>(Opens new window)</small>
+        </tal:test>
+        <div tal:condition="member/phone" style="padding-top:0.5em">
+          <b>Phone:</b> <span tal:replace="member/phone" />
+        </div>
+        <div tal:condition="member/fax" style="padding-top:0.5em">
+          <b>Fax:</b> <span tal:replace="member/fax" />
+        </div>
+        <div tal:condition="member/email" style="padding-top:0.5em">
+          <b>Email:</b> <a tal:content="member/email" tal:attributes="href string:mailto:${member/email}" />
+        </div>
+        <div tal:condition="member/hours" style="padding-top:0.5em">
+          <b>Hours:</b><br />
+          <span tal:replace="structure python: standm.newline_to_br(standm.html_quote(member.hours))" />
+        </div>
+      </td>
+    </tr>
+    <tal:block condition="member/address2">
+      <tr valign="top">
+        <th>Other Offices</th>
+      </tr>
+        <tr valign="top">
+          <td>
+            <tal:test condition="member/address2">
+              <div tal:content="structure python: standm.newline_to_br(standm.html_quote(member.address2))" />
+              <div>
+                <span tal:replace="member/city2" />, CA <span tal:replace="member/zip2" />
+              </div>
+              <a href="#" target="_blank"
+               tal:condition="python:1"
+               tal:attributes="href python: here.mapURL(member.address2.split('\n')[0], member.city2, member.zip2)">Draw me a map...</a> <small>(Opens new window)</small>
+            </tal:test>
+            <div tal:condition="member/phone2" style="padding-top:0.5em">
+              <b>Phone:</b> <span tal:replace="member/phone2" />
+            </div>
+            <div tal:condition="member/hours2" style="padding-top:0.5em">
+              <b>Hours:</b><br />
+              <span tal:replace="structure python: standm.newline_to_br(standm.html_quote(member.hours2))" />
+            </div>
+          </td>
+        </tr>
+        <tr valign="top">
+          <td>
+            <tal:test condition="member/address3">
+              <div tal:content="structure python: standm.newline_to_br(standm.html_quote(member.address3))" />
+              <div>
+                <span tal:replace="member/city3" />, CA <span tal:replace="member/zip3" />
+              </div>
+              <a href="#" target="_blank"
+               tal:condition="python:1"
+               tal:attributes="href python: here.mapURL(member.address3.split('\n')[0], member.city3, member.zip3)">Draw me a map...</a> <small>(Opens new window)</small>
+            </tal:test>
+            <div tal:condition="member/phone3" style="padding-top:0.5em">
+              <b>Phone:</b> <span tal:replace="member/phone3" />
+            </div>
+            <div tal:condition="member/hours3" style="padding-top:0.5em">
+              <b>Hours:</b><br />
+              <span tal:replace="structure python: standm.newline_to_br(standm.html_quote(member.hours3))" />
+            </div>
+          </td>
+        </tr>
+    </tal:block>
+    <tal:block condition="member/website">
+      <tr valign="top">
+        <th>Website</th>
+      </tr>
+        <tr valign="top">
+          <td><a href="#" tal:attributes="href member/website" tal:content="member/website" /></td>
+        </tr>
+    </tal:block>
+    <tal:block condition="member/specialties">
+      <tr valign="top">
+        <th>Practice Specialties</th>
+      </tr>
+        <tr valign="top">
+          <td tal:content="structure python: standm.newline_to_br(standm.html_quote(member.specialties))">
+          </td>
+        </tr>
+    </tal:block>
+    <tal:block condition="member/certifications">
+      <tr valign="top">
+        <th>Board Certifications</th>
+      </tr>
+        <tr valign="top">
+          <td tal:content="structure python: standm.newline_to_br(standm.html_quote(member.certifications))">
+          </td>
+        </tr>
+    </tal:block>
+    <tal:block condition="member/hospitals">
+      <tr valign="top">
+        <th>Hospital Affiliations</th>
+      </tr>
+        <tr valign="top">
+          <td tal:content="structure python: standm.newline_to_br(standm.html_quote(member.hospitals))">
+          </td>
+        </tr>
+    </tal:block>
+    <tal:block condition="member/insurance">
+      <tr valign="top">
+        <th>Insurance Accepted</th>
+      </tr>
+        <tr valign="top">
+          <td tal:content="structure python: standm.newline_to_br(standm.html_quote(member.insurance))">
+          </td>
+        </tr>
+    </tal:block>
+    <tal:block condition="member/schooling">
+      <tr valign="top">
+        <th>Education/Date of Graduation</th>
+      </tr>
+        <tr valign="top">
+          <td tal:content="structure python: standm.newline_to_br(standm.html_quote(member.schooling))">
+          </td>
+        </tr>
+    </tal:block>
+    <tal:block condition="member/residency">
+      <tr valign="top">
+        <th>Residency</th>
+      </tr>
+        <tr valign="top">
+          <td tal:content="structure python: standm.newline_to_br(standm.html_quote(member.residency))">
+          </td>
+        </tr>
+    </tal:block>
+    <tal:block condition="member/affiliations">
+      <tr valign="top">
+        <th>Professional Affilitations</th>
+      </tr>
+        <tr valign="top">
+          <td tal:content="structure python: standm.newline_to_br(standm.html_quote(member.affiliations))">
+          </td>
+        </tr>
+    </tal:block>
+
+  </table>
+
+</tal:block>
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+[default]
+title=Edit Member
+
+[actions]
+action.success=traverse_to:string:editMember_action

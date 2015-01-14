@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="Products.CPMAContent">
+<body>
+    <div metal:fill-slot="main">
+        <tal:main-macro metal:define-macro="main">
+
+              <div tal:content="view/queryCities" />
+
+              <div tal:content="python:view.queryByCity('Davis')" />
+              <div tal:content="python:view.queryByCity(['Davis', 'Oakland'])" />
+              <div tal:content="python:view.queryById(1803)" />
+              <div tal:content="python:view.queryByName('tracy')" />
+              <div tal:content="python:view.queryByName('bass')" />
+              <div tal:content="python:view.queryByRec(173717L)" />
+              <div tal:content="python:view.queryRecById(1803)" />
+              <div tal:content="python:view.searchCat()" />
+
+        </tal:main-macro>
+    </div>
+</body>
+</html>

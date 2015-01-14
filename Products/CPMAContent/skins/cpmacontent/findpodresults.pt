@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone">
+
+<tal:head metal:fill-slot="head_slot"
+          tal:define="dummy python:request.set('disable_border',1)"></tal:head>
+
+
+<div metal:fill-slot="main"
+     tal:define="view context/@@findpod_view;
+                 results view/searchCat;
+                 Batch python:modules['Products.CMFPlone'].Batch;
+                 b_size python:20;b_start python:0;b_start request/b_start | b_start;
+                 show_extra python:here.getId() == 'memberdirectory';
+                 ">
+
+    <h1 i18n:translate="heading_search_results">Search results</h1>
+
+    <div tal:condition="not: results">
+        <p><strong i18n:translate="description_no_results_found">No results were found.</strong></p>
+    </div>
+
+    <p tal:condition="show_extra">
+        Did you not find what you were looking for? <a href="#" tal:attributes="href string: ${here/portal_url}/desk/memberdirectory/">Try again.</a>
+    </p>
+    <p tal:condition="not:show_extra">
+        Did you not find what you were looking for? <a href="#" tal:attributes="href string: ${here/portal_url}/visitors/findpod/">Try again.</a> <span tal:condition="not:show_extra">CPMA members may also search the <a href="memberdirectory" tal:attributes="href string:${portal_url}/desk/memberdirectory">Member Directory</a> (login required).</span>
+    </p>
+
+    <div tal:condition="results" tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1)">
+
+        <strong>
+        <span tal:content="python:len(results)">234</span> items matching your criteria.
+        </strong>
+
+        <!-- Search results -->
+
+        <div tal:condition="exists: request/zip" class="formHelp">
+          Note: Distances were computed from zip code area center to center and are approximate.
+        </div>
+
+        <dl>
+        <tal:results repeat="result batch">
+        <tal:entry define="result_url string: showMember?rec=${result/rec}">
+            <dt>
+                <a href="#" tal:attributes="href result_url">
+                <img src="#"
+                     height="16"
+                     width="16"
+                     alt=""
+                     tal:replace="structure python:path('here/linkOpaque.gif')" /></a>&nbsp;<a
+                href="#" tal:attributes="href result_url"
+                tal:content="string:${result/lname}, ${result/fname}" />
+                - <span tal:replace="result/designation" />,
+                <span tal:replace="result/city" />
+                <tal:block tal:condition="result/company | nothing">
+                    - <span tal:replace="result/company" />
+                </tal:block>
+            </dt>
+
+        </tal:entry>
+        </tal:results>
+        </dl>
+
+        <div metal:use-macro="here/batch_macros/macros/navigation" />
+    </div>
+</div>
+
+</html>

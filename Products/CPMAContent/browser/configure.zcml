@@ -1,0 +1,66 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="Products.CPMAContent">
+
+  <include package="plone.app.contentmenu" />
+
+  <!-- -*- extra stuff goes here -*- -->
+
+
+
+    <!-- If you are using plone version 3.0, you will need to include the 
+         plone.browserlayer package in your buildout and uncomment the following
+         line in order to use IProductsCpmacontentLayer as a layer attribute -->
+    <!-- 
+    <include package="plone.browserlayer" />
+    -->
+    <!-- Example of browser component with IProductsCpmacontentLayer layer attribute -->
+    <!-- 
+    <browser:page
+        name="my-view"
+        for="*"
+        permission="zope.Public"
+        template="my-view.pt"
+        layer="..interfaces.IProductsCpmacontentLayer"
+        />
+    -->
+
+
+  <browser:page
+      for="*"
+      name="findpod_view"
+      class=".findpodview.FindPodView"
+      allowed_interface=".findpodview.IFindPodView"
+      permission="zope.Public"
+      layer="..interfaces.IProductsCpmacontentLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="updatepod"
+      class=".updatepod.UpdatePodView"
+      allowed_interface=".updatepod.IUpdatePodView"
+      permission="cmf.ManagePortal"
+      template="updatepod.pt"
+      layer="..interfaces.IProductsCpmacontentLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="sponsorsupport_view"
+      class=".sponsorsupportview.SponsorSupportView"
+      allowed_interface=".sponsorsupportview.ISponsorSupportView"
+      permission="zope.Public"
+      layer="..interfaces.IProductsCpmacontentLayer"
+      />
+
+  <browser:page
+      for="*"
+      name="cleanuser_view"
+      class=".cleanusers.CleanUserView"
+      allowed_interface=".cleanusers.ICleanUserView"
+      permission="cmf.ManagePortal"
+      />
+
+</configure>

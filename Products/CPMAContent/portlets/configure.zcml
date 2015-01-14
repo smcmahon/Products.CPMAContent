@@ -1,0 +1,24 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="Products.CPMAContent">
+
+  <!-- Ensure Plone's portlets ZCML has already been processed;
+       without this, we may get a permission lookup error -->
+  <include package="plone.app.portlets" />
+
+	<!-- -*- extra stuff goes here -*- -->
+
+  <plone:portlet
+      name="Products.CPMAContent.portlets.SponsorPortlet"
+      interface=".sponsorportlet.ISponsorPortlet"
+      assignment=".sponsorportlet.Assignment"
+      view_permission="zope2.View"
+      edit_permission="cmf.ManagePortal"
+      renderer=".sponsorportlet.Renderer"
+      addview=".sponsorportlet.AddForm"
+      editview=".sponsorportlet.EditForm"
+      />
+
+
+</configure>

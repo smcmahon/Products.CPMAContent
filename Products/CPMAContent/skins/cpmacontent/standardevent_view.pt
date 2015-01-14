@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:content-core fill-slot="content-core">
+    <metal:decoration use-macro="context/dec_images/macros/dec_images">
+      Decorative Images
+    </metal:decoration>
+
+    <div class="documentDescription" tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;">
+        <tal:block condition="python: here.start != here.end">
+          <span tal:replace="python:toLocalizedTime(here.start, long_format=True).replace('12:00 AM', '')">Start Date Time</span>
+          <tal:block condition="exists: here/end">
+            <span i18n:translate="event_and">-</span>
+            <span tal:replace="python:toLocalizedTime(here.end, long_format=True).replace('12:00 AM', '')">End Date Time</span>
+          </tal:block>
+        </tal:block>
+        <tal:block condition="python: here.start == here.end">
+          <span tal:replace="python:toLocalizedTime(here.start, long_format=True).replace('12:00 AM', '')">Start Date Time</span>
+        </tal:block>
+    </div>
+
+    <div tal:replace="structure context/body/output">
+        Body text
+    </div>
+
+    <fieldset id="folder-listing">
+        <legend>Downloads</legend>
+        <tal:block define="listing_macro context/folder_listing/macros/listing">
+            <metal:use_macro use-macro="listing_macro" />
+        </tal:block>
+    </fieldset>
+</metal:content-core>
+
+</body>
+</html>
+

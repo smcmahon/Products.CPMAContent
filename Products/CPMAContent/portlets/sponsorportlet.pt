@@ -1,0 +1,9 @@
+<dl class="portlet portletSponsorPortlet"
+    i18n:domain="Products.CPMAContent">
+
+    <dd class="portletItem odd" tal:condition="sponsor" tal:define="sponsor view/getSponsor">
+        <a tal:content="structure sponsor/@@images/sponsor_image/preview"
+            tal:attributes="href sponsor/sponsor_url; title sponsor/alt_text" />
+    </dd>
+
+</dl>

@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="plone">
+
+<div metal:fill-slot="main" tal:define="view context/@@findpod_view">
+
+    <h1 tal:content="here/title_or_id" class="documentFirstHeading">
+        Title or id
+    </h1>
+
+    <div metal:use-macro="here/dec_images/macros/dec_images">
+        Decorative Images
+    </div>
+
+    <div class="documentDescription">
+<p>XXXThe California Podiatric Medical Association is a professional association of doctors of podiatric medicine (DPMs) and podiatric medical students dedicated to keeping Californians on their feet - healthy, active and productive. CPMA members must adhere to the American Podiatric Medical Association's (APMA) Code of Ethics.</p>
+
+<p>Find members of the California Podiatric Medical Association by name, city or proximity to your zip code.</p>
+    </div>
+
+    <form action="results"
+          method="get"
+          name="search">
+
+        <fieldset>
+
+            <legend>Search by Podiatrist Name</legend>
+
+            <div class="field">
+                <label for="title">Name</label>
+
+                <div class="formHelp">
+                Enter a last or first name.
+                </div>
+
+                <input type="text"
+                       id="fname"
+                       name="fname"
+                       size="25"
+                       />
+            </div>
+
+            <div class="formControls">
+                <input class="context"
+                       type="submit"
+                       name="submit"
+                       value="Search"
+                       i18n:attributes="value"
+                       />
+            </div>
+
+        </fieldset>
+    
+    </form>
+
+    <form action="results"
+          method="get"
+          name="search">
+
+        <fieldset>
+
+            <legend>Search by City</legend>
+
+            <div class="field">
+                <label for="city">City</label>
+
+                <div class="formHelp">
+                Select one or more cities. Use Ctrl-Click to select multiple cities. (Mac: Cmd-Click)
+                </div>
+
+                <select name="city:list"
+                        id="city"
+                        size="4"
+                        multiple="multiple"
+                        tal:define="usedCities view/queryCities;"
+                        >
+                    <option value="#"
+                            tal:repeat="acity usedCities"
+                            tal:content="acity"
+                            tal:attributes="value acity">dummy</option>
+                </select>
+                       
+            </div>
+
+            <div class="formControls">
+                <input class="context"
+                       type="submit"
+                       name="submit"
+                       value="Search"
+                       i18n:attributes="value"
+                       />
+            </div>
+
+        </fieldset>
+    
+    </form>
+
+    <form action="results"
+          method="get"
+          name="search">
+
+        <fieldset>
+
+            <legend i18n:translate="legend_search_terms">Search by Distance from your Zip Code</legend>
+
+            <div class="field">
+                <label for="distance">Zip Code</label>
+
+                <div class="formHelp">
+                Enter your zip code and choose a search radius.
+                </div>
+
+                <input type="text"
+                       id="zip"
+                       name="zip"
+                       size="5"
+                       />
+                <input type="radio" name="radius" value="5" />5 Miles
+                <input type="radio" name="radius" value="10" />10 Miles
+                <input type="radio" name="radius" value="20" checked="checked" />20 Miles
+                <input type="radio" name="radius" value="50" />50 Miles
+                       
+            </div>
+
+            <div class="formControls">
+                <input class="context"
+                       type="submit"
+                       name="submit"
+                       value="Search"
+                       i18n:attributes="value"
+                       />
+            </div>
+
+        </fieldset>
+    
+    </form>
+
+    
+  <h3 id="notes">DISCLAIMER</h3>
+<p>The CPMA "Find a Podiatrist" service is intended for personal use only and is designed to help you find a practicing member podiatrist in your area. The material included in this Web site is for informational purposes only.  Inclusion of a podiatrist is not and does not imply CPMA referral, endorsement or recommendation, nor does the omission of any individual indicate CPMA disapproval.</p>
+
+<p>Each podiatrist listed on CPMA Find-A-Podiatrist search site is a doctor of podiatric medicine (DPM), and is licensed to practice in the State of California.</p>
+
+<p>Although CPMA undertakes reasonable efforts to ensure the information contained in "Find a Podiatrist" is accurate, CPMA does not guarantee the accuracy of this information.</p>
+
+<p>Some listings in "Find a Podiatrist" include links to Web sites maintained by CPMA members. The CPMA provides these links as a guide to other Internet resources related to this specialty. CPMA is not responsible for the content or privacy practices of other Web sites.</p>
+
+<p>CPMA shall not be liable to you or others for any decision made or action taken by you in reliance on the information obtained from this site.</p>
+
+</div>
+
+</html>

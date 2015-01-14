@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      xml:lang="en" lang="en"
+      metal:use-macro="context/prefs_main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+
+<metal:main fill-slot="prefs_configlet_main">
+
+    <metal:form define-macro="form">
+
+      <a href=""
+         class="link-parent"
+         tal:attributes="href string:$portal_url/plone_control_panel"
+         i18n:translate="label_up_to_plone_setup">
+          Up to Site Setup
+      </a>
+
+     <metal:block define-macro="header">
+        <br />
+        <br />
+        <pre tal:define="results view/processForm" tal:condition="results" tal:content="results" />
+     </metal:block>
+
+     <h1 class="documentFirstHeading"
+         i18n:translate=""
+         metal:define-slot="heading">
+         Member Directory Upload
+     </h1>
+
+     <div class="documentDescription" i18n:translate="">
+This form allows you to upload a database export file to update the member directory. The file must be in tab-delimited format with the first line a field list. Fields must be as expected by the update program, or the update will fail.
+     </div>
+
+    <div id="content-core">
+
+        <form action="."
+              tal:attributes="action request/URL"
+              method="post"
+              class="edit-form"
+              enctype="multipart/form-data">
+
+            <fieldset>
+                <legend i18n:translate="heading_zope_server">
+                    Database Upload
+                </legend>
+
+                <div class="formControls">
+                    <label for="uploadFile">Choose File</label>
+                    <p>Use the "Browse" button to locate the tab-delimited database export file. </p>
+                    <span class="actionButtons">
+                        <input type="file"
+                               name="uploadfile"
+                               value="Database File"
+                                />
+
+
+                    </span>
+                </div>
+
+                <div id="actionsView" class="formControls">
+                    <span class="actionButtons">
+                        <input type="submit"
+                               id="form.actions.doupload"
+                               name="form.actions.doupload"
+                               value="Upload"
+                               i18n:attributes="value"
+                               class="standalone" />
+
+
+                    </span>
+                </div>
+
+            </fieldset>
+
+            <input tal:replace="structure context/@@authenticator/authenticator" />
+
+        </form>
+        <p>
+          <em>Please Note:</em> the database upload and update will take a few minutes to complete after you press the "Upload" button. Be patient and don't press the button again or navigate to another page until a status message appears. 
+        </p>
+
+    </div>
+
+</metal:form>
+
+
+
+</metal:main>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US"
+      lang="en-US"
+      metal:use-macro="here/main_template/macros/master">
+  <body>
+  
+    <div metal:fill-slot="main" 
+       tal:define="standm modules/Products/PythonScripts/standard;
+                   view context/@@findpod_view;
+                   plone_view context/@@plone;
+                   portal_state context/@@plone_portal_state;
+                   isEditor view/canEditHere">
+
+      <div metal:define-macro="main" tal:omit-tag="">
+
+      <div class="documentDescription" tal:condition="isEditor">
+          This form allows you to edit the supplementary member profile information attached to this member's record.
+          The fundamental data (name, address, phone) is drawn from uploaded CPMA database records and may not be edited here;
+          Update it via the office member database.
+      </div>
+      <div class="documentDescription" tal:condition="not: isEditor">
+          This form allows you to edit the supplementary member profile information attached to your CPMA member record.
+          The fundamental data (name, primary practice address and phone) is drawn from uploaded CPMA database records and may not be edited here;
+          contact the CPMA office if you need to change them.
+      </div>
+
+<tal:block repeat="member python:view.queryByRec(request.rec)">
+
+    <h1><span tal:replace="string: ${member/fname} ${member/lname}" /><span tal:condition="member/designation" tal:replace="string:, ${member/designation}" /></h1>
+
+  <fieldset>
+  <legend>Primary Practice Address &mdash; Contact CPMA to Change</legend>
+  <dl>
+    <tal:test condition="member/phone">
+      <dt>Phone</dt><dd tal:content="member/phone" />
+    </tal:test>
+    <tal:test condition="member/address">
+      <dt>Address</dt>
+      <dd>
+        <div tal:content="structure python: standm.newline_to_br(standm.html_quote(member.address))" />
+        <div>
+          <span tal:replace="member/city" />, CA <span tal:replace="member/zip" />
+        </div>
+        <a href="#" target="_blank"
+         tal:condition="python:1"
+         tal:attributes="href python: here.mapURL(member.address.split('\n')[0], member.city, member.zip)">Draw me a map...</a> <small>(Opens new window)</small>
+      </dd>
+    </tal:test>
+  </dl>
+  </fieldset>
+  
+  
+  <div tal:define="errors options/state/getErrors">
+    
+    <form method="POST" tal:attributes="action string:${here/absolute_url}/${template/id};">
+      <input type="hidden" name="form.submitted" value="1" />
+      <input type="hidden" name="rec" tal:attributes="value member/rec" />
+      <input type="hidden" name="member_id" tal:attributes="value member/id" />
+      <input type="hidden" name="member_name" tal:attributes="value string: ${member/fname} ${member/lname}" />
+
+      <p class="error_message" tal:define="err errors/n|nothing" tal:condition="err"><b tal:content="err" /></p>
+      
+        <fieldset>
+            <legend>Member Profile</legend>
+
+            <div class="field">
+                <label>Office Hours for Primary Location</label>
+                <div class="formHelp">
+                Member's office hours. Will be shown without styling, with line breaks preserved.
+                </div>
+                <textarea cols="40" rows="3" name="hours"
+                 tal:content="member/hours | nothing" ></textarea>
+            </div>
+            <div class="field">
+                <label>Practice Specialties</label>
+                <div class="formHelp">
+                Member specialties. Will be shown without styling, with line breaks preserved.
+                </div>
+                <textarea cols="40" rows="3" name="specialties"
+                 tal:content="member/specialties | nothing" ></textarea>
+            </div>
+            <div class="field">
+                <label>Board Certifications</label>
+                <div class="formHelp">
+                Will be shown without styling, with line breaks preserved.
+                </div>
+                <textarea cols="40" rows="3" name="certifications"
+                 tal:content="member/certifications | nothing" ></textarea>
+            </div>
+            <div class="field">
+                <label>Hospital Affiliations</label>
+                <div class="formHelp">
+                Will be shown without styling, with line breaks preserved.
+                </div>
+                <textarea cols="40" rows="3" name="hospitals"
+                 tal:content="member/hospitals | nothing" ></textarea>
+            </div>
+            <div class="field">
+                <label>Insurance Accepted</label>
+                <div class="formHelp">
+                Insurances accepted by member. Will be shown without styling, with line breaks preserved.
+                </div>
+                <textarea cols="40" rows="3" name="insurance"
+                 tal:content="member/insurance | nothing" ></textarea>
+            </div>
+            <div class="field">
+                <label>Education/Date of Graduation</label>
+                <div class="formHelp">
+                Will be shown without styling, with line breaks preserved.
+                </div>
+                <textarea cols="40" rows="3" name="schooling"
+                 tal:content="member/schooling | nothing" ></textarea>
+            </div>
+            <div class="field">
+                <label>Residency</label>
+                <div class="formHelp">
+                Will be shown without styling, with line breaks preserved.
+                </div>
+                <textarea cols="40" rows="3" name="residency"
+                 tal:content="member/residency | nothing" ></textarea>
+            </div>
+            <div class="field">
+                <label>Professional Affiliations</label>
+                <div class="formHelp">
+                Will be shown without styling, with line breaks preserved.
+                </div>
+                <textarea cols="40" rows="3" name="affiliations"
+                 tal:content="member/affiliations | nothing" ></textarea>
+            </div>
+            <div class="field">
+                <label>Website</label>
+                <div class="formHelp">
+                The URL of your practice's website. E.G., "http://www.cpmamembersite.com/".
+                </div>
+                <input type="text" name="website" size="40" maxlength="255" tal:attributes="value member/website | nothing">
+            </div>
+
+          </fieldset>
+
+            <fieldset>
+              <legend>Second Practice Phone/Address/Hours</legend>
+              <div class="formHelp">
+              A location that will be shown in addition to your primary practice. Searches by location will also find this location.
+              </div>
+  
+              <div class="field">
+                  <label>Phone</label>
+                  <div class="formHelp">
+                  Practice phone number.
+                  </div>
+                  <input type="text" name="phone2" tal:attributes="value member/phone2 | nothing" />
+              </div>
+
+              <div class="field">
+                  <label>Address</label>
+                  <div class="formHelp">
+                  Practice street address. Will be shown without styling, with line breaks preserved.
+                  </div>
+                  <textarea cols="40" rows="3" name="address2"
+                   tal:content="member/address2 | nothing" ></textarea>
+              </div>
+
+              <div class="field">
+                  <label>City</label>
+                  <input type="text" name="city2" size="20" maxlength="100" tal:attributes="value member/city2 | nothing" />
+                  <label>State</label>
+                  <select name="state2" id="state2" size="1" 
+                   tal:define="states python:
+('AL','AK','AS','AZ','AR','CA','CO','CT','DE','DC',
+'FM','FL','GA','GU','HI','ID','IL','IN','IA','KS',
+'KY','LA','ME','MH','MD','MA','MI','MN','MS','MO',
+'MT','NE','NV','NH','NJ','NM','NY','NC','ND','MP',
+'OH','OK','OR','PW','PA','PR','RI','SC','SD','TN',
+'TX','UT','VT','VI','VA','WA','WV','WI','WY')" >
+  <option tal:repeat="astate states" tal:content="astate" tal:attributes="value astate; selected python:test( (member.state2 == astate) or ((not member.state2) and (astate=='CA')), 'selected', nothing)" />
+</select>
+                  <label>Zip</label>
+                  <input type="text" name="zip2" size="5" maxlength="5" tal:attributes="value member/zip2 | nothing" />
+              </div>
+
+              <div class="field">
+                  <label>Office Hours for Location</label>
+                  <div class="formHelp">
+                  Will be shown without styling, with line breaks preserved.
+                  </div>
+                  <textarea cols="40" rows="3" name="hours2"
+                   tal:content="member/hours2 | nothing" ></textarea>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Third Practice Phone/Address/Hours</legend>
+              <div class="formHelp">
+              A location that will be shown in addition to your primary practice. Searches by location will also find this location.
+              </div>
+  
+              <div class="field">
+                  <label>Phone</label>
+                  <div class="formHelp">
+                  Practice phone number.
+                  </div>
+                  <input type="text" name="phone3" tal:attributes="value member/phone3 | nothing" />
+              </div>
+
+              <div class="field">
+                  <label>Address</label>
+                  <div class="formHelp">
+                  Practice street address. Will be shown without styling, with line breaks preserved.
+                  </div>
+                  <textarea cols="40" rows="3" name="address3"
+                   tal:content="member/address3 | nothing" ></textarea>
+              </div>
+
+              <div class="field" tal:define="state3 member/state3 | string:CA">
+                  <label>City</label>
+                  <input type="text" name="city3" size="20" maxlength="100" tal:attributes="value member/city3 | nothing" />
+                  <label>State</label>
+                  <select name="state3" id="state3" size="1" 
+                   tal:define="states python:
+('AL','AK','AS','AZ','AR','CA','CO','CT','DE','DC',
+'FM','FL','GA','GU','HI','ID','IL','IN','IA','KS',
+'KY','LA','ME','MH','MD','MA','MI','MN','MS','MO',
+'MT','NE','NV','NH','NJ','NM','NY','NC','ND','MP',
+'OH','OK','OR','PW','PA','PR','RI','SC','SD','TN',
+'TX','UT','VT','VI','VA','WA','WV','WI','WY')" >
+  <option tal:repeat="astate states" tal:content="astate" 
+    tal:attributes="value astate; selected python:test(state3 == astate, 'selected', nothing)" />
+</select>
+                  <label>Zip</label>
+                  <input type="text" name="zip3" size="5" maxlength="5" tal:attributes="value member/zip3 | nothing" />
+              </div>
+
+              <div class="field">
+                  <label>Office Hours for Location</label>
+                  <div class="formHelp">
+                  Will be shown without styling, with line breaks preserved.
+                  </div>
+                  <textarea cols="40" rows="3" name="hours3"
+                   tal:content="member/hours3 | nothing" ></textarea>
+              </div>
+            </fieldset>
+            
+            <div class="formControls">
+                <input class="context" 
+                       type="submit" 
+                       name="form.button.submit" 
+                       value="Submit Changes"
+                        />
+            </div>
+
+      
+      
+    </form>
+
+  </div>
+  
+  
+
+</tal:block>
+
+
+      </div>
+    </div>
+  </body>
+</html>

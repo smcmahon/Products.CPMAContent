@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US"
+      i18n:domain="plone">
+
+<body>
+<tal:macro metal:define-macro="dec_images">
+
+<tal:block condition="python: hasattr(here.aq_explicit,'imageone') or hasattr(here.aq_explicit,'imagetwo')">
+
+  <div style="float:right; padding: 2em 0 1em 1em; text-align:right;"
+       tal:define="ImageAlign string:left; ImageAlign here/image_align | ImageAlign"
+       tal:attributes="style python:
+        test(getattr(here, 'text_wrap', False),
+         test(ImageAlign=='right', 'float:right;; padding: 2em 0 1em 1em;; text-align:right;;', 'float:left;; padding: 2em 2em 1em 0;; text-align:left;;'),
+         nothing)
+   ">
+
+    <div tal:condition="here/aq_explicit/imageone | nothing" tal:replace="structure
+  context/@@images/imageone/preview" />
+
+    <tal:block condition="here/aq_explicit/imagetwo | nothing">
+      <br />
+      <div tal:replace="structure
+  context/@@images/imagetwo/preview" />
+    </tal:block>
+
+  </div>
+
+</tal:block>
+
+</tal:macro>
+</body>
+</html>
