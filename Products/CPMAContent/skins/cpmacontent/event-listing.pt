@@ -1,0 +1,97 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:title fill-slot="content-title">
+
+</metal:title>
+
+<metal:content-core fill-slot="content-core">
+
+    <metal:content-core define-macro="content-core"
+        tal:define="view nocall:context/@@eventsupport;
+                    months view/getMonths">
+
+<style>
+table.eventview {
+    width: 95%;
+    margin-top: 1em;
+}
+table.eventview th,
+table.eventview td {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+}
+.eventview th {
+    font-size: 125%;
+    font-weight: bold;
+    text-align: left;
+}
+.eventview td.drange {
+    width: 20%;
+    background-color: #ccc;
+    text-align: right;
+}
+</style>
+
+<div class="documentDescription">
+    <a tal:attributes="href string:${here/@@plone_portal_state/navigation_root_url}/news-events/events">View calendar as grid.</a>
+</div>
+
+<table class="eventview" tal:define="
+    rview context/@@rcalendar_view;
+    events rview/getNext90DaysEvents;
+    toLocalizedTime nocall: context/@@plone/toLocalizedTime;
+    global lastdate nothing;
+    global lastmonth nothing;
+    ">
+        <tal:events tal:repeat="obj events">
+          <tal:block tal:define="oddrow repeat/obj/odd;
+                      date python:obj[0];
+                      start python:obj[1];
+                      event python:obj[2];
+                      cdate python:'%s, %s'%(date.Day(),toLocalizedTime(date).replace(' 0',' '))"
+                      tal:condition="event/homepage | python:True">
+                <tal:block tal:condition="python:lastdate!=cdate">
+                  <tr tal:condition="python:date.Month() != lastmonth">
+                    <th colspan="2">
+                      <span tal:define="global lastmonth date/Month" tal:replace="lastmonth" />,
+                      <span tal:replace="date/year" />
+                    </th>
+                  </tr>
+                </tal:block>
+                <tr>
+                  <td class="drange">
+                    <h4 tal:define="global lastdate cdate" tal:content="date/day">Date</h4>
+                  </td>
+                  <td class="etitle">
+                    <a href="#"
+                       class="tile"
+                       tal:attributes="href event/getURL;
+                                       title event/Description">
+                        <span tal:replace="event/Title">
+                         Some Event
+                        </span>
+                        <span class="portletItemDetails">
+                            <tal:condition condition="event/location | nothing">
+                                <tal:location content="event/location">Location</tal:location>
+                            </tal:condition>
+                        </span>
+                    </a>
+                  </td>
+                </tr>
+          </tal:block>
+        </tal:events>
+</table>
+
+
+    </metal:content-core>
+</metal:content-core>
+
+</body>
+</html>
