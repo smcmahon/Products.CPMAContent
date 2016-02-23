@@ -3,7 +3,7 @@ from zope.interface import implements, Interface
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
 
-from Products.CPMAContent import CPMAContentMessageFactory as _
+# from Products.CPMAContent import CPMAContentMessageFactory as _
 
 
 class ISponsorSupportView(Interface):
@@ -60,13 +60,16 @@ class SponsorSupportView(BrowserView):
             return propval
 
     def findSponsor(self, propname):
-        # propname should be 'MajorSponsor' 'MinorSponsor' or 'MinorSponsor2'
+        # propname should be 'MajorSponsor' 'MinorSponsor', 'MinorSponsor2' or 'footer-sponsor'
         # Looks in sponsors folder for matching PageSponsor (type not checked)
         # Checks pub status and returns page sponsor content object.
 
         sponsorId = self.findSponsorId(propname)
         if sponsorId and sponsorId != 'no_sponsor':
-            sponsorFolder = getattr(self.portal, 'sponsors')
+            if propname == 'footer_sponsor':
+                sponsorFolder = getattr(self.portal, 'footer-sponsors')
+            else:
+                sponsorFolder = getattr(self.portal, 'sponsors')
             if sponsorFolder:
                 sponsor = getattr(sponsorFolder, sponsorId)
                 if not self.workflow_tool.getInfoFor(sponsor, 'review_state', '') in ['published', 'visible']:
