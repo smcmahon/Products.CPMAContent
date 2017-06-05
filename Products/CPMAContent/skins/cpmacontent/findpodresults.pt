@@ -49,7 +49,7 @@
                      height="16"
                      width="16"
                      alt=""
-                     tal:replace="structure python:path('here/linkOpaque.gif')" /></a>&nbsp;<a
+                     tal:replace="structure python:path('here/linkOpaque.png')" /></a>&nbsp;<a
                 href="#" tal:attributes="href result_url"
                 tal:content="string:${result/lname}, ${result/fname}" />
                 - <span tal:replace="result/designation" />,
